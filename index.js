@@ -1,14 +1,16 @@
+require('dotenv').config()
 var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
 
-const APP_TOKEN = '---'
+const APP_TOKEN = process.env.APP_TOKEN
 
-var app = express();
+const app = express();
 app.use(bodyParser.json());
 
-app.listen(3000, function () {
-  console.log("El servidor se encuentra en el puerto 3000");
+const port = process.env.APP_PORT
+app.listen(port, function () {
+  console.log(`El servidor se encuentra en el puerto ${port}`);
 });
 
 app.get('/', function (req, res) {
@@ -16,7 +18,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/webhook', (req, res) => {
-  if (req.query['hub.verify_token'] === 'test_token_say_hello') {
+  if (req.query['hub.verify_token'] === process.env.APP_AUTH) {
     res.send(req.query['hub.challenge'])
   } else {
     res.send('No tiene acceso');
